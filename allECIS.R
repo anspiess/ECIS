@@ -19,10 +19,10 @@ getECIS <- function(file, freq = NULL) {
     else {
       cat("Available Frequencies [Hz]:", Frequencies, "\n")
       cat("Select one and type chosen frequency:")
-      RL <- 0
+      RL <- as.numeric(readLines(n = 1))
       while(!(RL %in% Frequencies)) {
-        RL <- as.numeric(readLines(n = 1))
         cat("This is not one of the available frequencies! Once more...\n")
+        RL <- as.numeric(readLines(n = 1))
       }
     }
     sel <- which(Frequencies == RL)
