@@ -39,6 +39,6 @@ install.packages(c("minpack.lm", "segmented", "splines", "readxl"))
 To have all functions available in your `R` environment, type the following in an `R` session:
 ```
 if (!'devtools' %in% installed.packages()) install.packages(devtools)
-source_url("https://raw.githubusercontent.com/anspiess/ECIS/master/allECIS.R")
+source_url("https://raw.githubusercontent.com/anspiess/ECIS/main/allECIS.R")
 
 ```
