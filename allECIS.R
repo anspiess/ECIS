@@ -147,6 +147,13 @@ delECIS <- function(ecis, which) {
   return(Out)
 }
 
+selECIS <- function(ecis, which) {
+  if(class(ecis)[1] != "ecis") stop("This is not an 'ecis' object!")
+  Out <- ecis[which]
+  class(Out) <- c("ecis", "list")
+  return(Out)
+}
+
 addECIS <- function(...) {
   Data <- list(...)
   cl <- sapply(Data, function(x) class(x)[1])

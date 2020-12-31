@@ -5,7 +5,7 @@ Provides functions for the analysis of ECIS data, such as
 
 * Import of data, with optional selection of frequencies
 * Plotting data in matrix or single format, with or without fitted curves
-* Deleting and adding curves from/to a larger set
+* Deleting, adding and selecting curves from/to a larger set
 * Modification of ECIS data:
   + cutting of time points
   + baselining ECIS data
@@ -39,6 +39,7 @@ install.packages(c("minpack.lm", "segmented", "splines", "readxl"))
 To have all functions available in your `R` environment, type the following in an `R` session:
 ```
 if (!'devtools' %in% installed.packages()) install.packages(devtools)
+library(devtools)
 source_url("https://raw.githubusercontent.com/anspiess/ECIS/main/allECIS.R")
 
 ```
