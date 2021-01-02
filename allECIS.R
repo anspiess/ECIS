@@ -97,10 +97,14 @@ plotECIS <- function(ecis, which = NULL, style = c("matrix", "single"), fit = c(
         plot(dat, pch = 16, cex = 0.5, col = if(!is.null(col)) col[i] else "black", ...)
         if (!is.null(Preds)) lines(dat[, 1], Preds[[i]], col = "darkred", lwd = 2, ...)
         grid()
-        if (legend) {
+        if (!is.character(legend) && legend) {
           Well <- strsplit(colnames(dat), "_")[[1]][2]
           legend("topleft", Well, cex = cex.legend)
-       }
+        }
+        if (is.character(legend)) {
+          if (length(legend) != length(Data)) stop("'legend' should be of same length as 'ecis'!")
+          legend("topleft", legend[i])
+        }
     }
   }
  
