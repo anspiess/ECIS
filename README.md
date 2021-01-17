@@ -3,7 +3,7 @@
 ## Overview
 Provides functions for the analysis of ECIS data, such as          
 
-* Import of data, with optional selection of frequencies
+* Import of data (.xlsx or .csv), with optional selection of frequencies
 * Plotting data in matrix or single format, with or without fitted curves
 * Deleting, adding and selecting curves from/to a larger set
 * Modification of ECIS data:

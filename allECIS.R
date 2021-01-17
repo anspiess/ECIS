@@ -4,8 +4,9 @@ library(splines)
 library(readxl)
 
 getECIS <- function(file, freq = NULL) {
-  ## get ECIS data
-  IN <- as.data.frame(read_excel(file, col_names = FALSE))
+  ## get ECIS data, either xlsx or csv
+  if (grepl(".xlsx", file)) IN <- as.data.frame(read_excel(file, col_names = FALSE))
+  if (grepl(".csv", file)) IN <- as.data.frame(readLines(file))
   
   ## check for original format
   EP <- IN[1, ]; if (EP != "[ECIS_Parameters]") stop("Not an original ECIS file")
@@ -29,11 +30,13 @@ getECIS <- function(file, freq = NULL) {
     if (sel < length(Frequencies)) IN <- IN[(hasFreq[sel] + 1):(hasFreq[sel + 1] - 2), , drop = FALSE]
     else IN <- IN[(hasFreq[sel] + 1):nrow(IN), , drop = FALSE]
   } else Frequencies <- NULL
-    
+  
   ## find line containing header + well info
   sel <- grep("Time\\(hrs\\)", IN[, 1])
   Header <- strsplit(IN[sel, ], ",")[[1]]; Header <- sub(" ", "", Header)
+  Header <- Header[Header != ""]
   Wells <- strsplit(IN[sel+1, ], ",")[[1]]; Wells <- sub(" ", "", Wells)
+  Wells <- Wells[Wells != ""]
   if (length(Header) != length(Wells)) stop("Header and Wells annotation of unequal length!")
   
   ## create new header info
@@ -48,7 +51,7 @@ getECIS <- function(file, freq = NULL) {
   ## split ECIS data into matrix
   for (i in 1:length(Seq)) MAT[i, ] <- as.numeric(strsplit(IN[Seq[i], ], ",")[[1]])
   colnames(MAT) <- Header
- 
+  
   ## get rid of resistance and capacitance
   m1 <- grep("Res.", colnames(MAT)); m2 <- grep("Cap.", colnames(MAT)) 
   if (length(m1) != 0 & length(m2) != 0) MAT <- MAT[, -c(m1, m2)]
