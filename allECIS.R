@@ -282,7 +282,7 @@ fit <- function(data, nknots = 200, npsi = 3, norm = FALSE) {
   ## get Time @ Imp = 0.1
   P01.log <- try(uniroot(function(x) P01 - predict(NLM, newdata = data.frame(x = x)), lower = 0, upper = max(x, na.rm = TRUE))$root, silent = TRUE)
   if (inherits(P01.log, "try-error")) {
-    print("Error in root finding. Consider using 'normalize' first!")
+    print("Error in root finding!")
     P01.log <- NA
   }
   
@@ -297,7 +297,7 @@ fit <- function(data, nknots = 200, npsi = 3, norm = FALSE) {
   p05.seg <- try(uniroot(function(x) P05 - predict(SEG, newdata = data.frame(x = x)), 
                        lower = SEG$psi[1, 2], upper = max(x, na.rm = TRUE), extendInt = "yes")$root, silent = TRUE)
   if (inherits(p05.seg, "try-error")) {
-    print("Error in root finding. Consider using 'normalize' first!")
+    print("Error in root finding!")
     p05.seg <- NA; slope05.seg <- NA
   } else {
     sel <- findInterval(p05.seg, SEG$psi[, 2])
@@ -308,7 +308,7 @@ fit <- function(data, nknots = 200, npsi = 3, norm = FALSE) {
   p02.seg <- try(uniroot(function(x) P02 - predict(SEG, newdata = data.frame(x = x)), 
                        lower = SEG$psi[1, 2], upper = max(x, na.rm = TRUE), extendInt = "yes")$root, silent = TRUE)
   if (inherits(p02.seg, "try-error")) {
-    print("Error in root finding. Consider using 'normalize' first!")
+    print("Error in root finding!")
     p02.seg <- NA; slope02.seg <- NA
   } else {
     sel <- findInterval(p02.seg, SEG$psi[, 2])
@@ -319,7 +319,7 @@ fit <- function(data, nknots = 200, npsi = 3, norm = FALSE) {
   p01.seg <- try(uniroot(function(x) P01 - predict(SEG, newdata = data.frame(x = x)), 
                  lower = SEG$psi[1, 2], upper = max(x, na.rm = TRUE), extendInt = "yes")$root, silent = TRUE)
   if (inherits(p01.seg, "try-error")) {
-    print("Error in root finding. Consider using 'normalize' first!")
+    print("Error in root finding!")
     p01.seg <- NA; slope01.seg <- NA
   } else {
     sel <- findInterval(p01.seg, SEG$psi[, 2])
@@ -362,6 +362,22 @@ fitECIS <- function(ecis, which = NULL, nknots = 200, npsi = 3) {
 parECIS <- function(fit) {
   if (class(fit)[2] != "fit") stop("This is not an ECIS fit list!")
   OUT <- sapply(fit, function(x) unlist(x[-c(6, 7, 14, 15, 24:26)]))
+  
+  if (class(OUT)[1] == "list") {
+    LEN <- lengths(OUT)
+    sel <- which(LEN < 26)
+    for (i in sel) {
+      Empty <- rep(NA, 26)
+      names(Empty) <- c("fdm.spline", "sdm.spline", "xfdm.spline", "xsdm.spline", "x01.spline", "fdm.log", "sdm.log", "xfdm.log", 
+                        "xsdm.log", "x01.log", "coef.log.b", "coef.log.e", "p05.seg", "slope05.seg", "p02.seg", "slope02.seg", 
+                        "p01.seg", "slope01.seg", "coef.seg.(Intercept)", "coef.seg.x", "coef.seg.U1.x", "coef.seg.U2.x", 
+                        "coef.seg.U3.x", "psi.seg.psi1.x", "psi.seg.psi2.x", "psi.seg.psi3.x") 
+      m <- match(names(OUT[[sel]]), names(Empty))
+      Empty[m] <- OUT[[sel]]; OUT[[sel]] <- Empty
+      OUT <- as.data.frame(OUT)
+    }
+  }
+  
   colnames(OUT) <- attr(fit, "names")
   return(OUT)
 }  
