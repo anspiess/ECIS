@@ -10,7 +10,7 @@ Parameters are:
 * `na.omit`: If `TRUE` (default), alll data rows with NAs are omitted, to avoid fitting errors. 
 
 ### Example
-Using the file "Classical.xlsx", do the following:
+Download the file "Classical.xlsx" and do the following:
 ```
 if (!'devtools' %in% installed.packages()) install.packages(devtools)
 library(devtools)
